@@ -6,9 +6,15 @@ Simple way to make your backbone collections sortable by any properties in any d
 
     var MyCollection = Sortable.extend({
         model: MyModel,
-        sort: 'date',
-        direction: 'desc',
         url: 'some/url/to/get/data',
+        
+        // define default sort property
+        sort: 'date',
+        
+        // define default sort direction
+        direction: 'desc',
+        
+        // define sort handlers which we will use
         sorters: {
             date: function(model) {
                 return model.get('date');
@@ -25,13 +31,15 @@ Simple way to make your backbone collections sortable by any properties in any d
     var MyView = Backbone.View.extend({
         initialize: function() {
             this.collection = new MyCollection();
-            this.collection.sort = 'name';
-            this.collection.direction = 'asc';
             this.collection.fetch();
             
             this.template = _.template('my_template.html');
         },
         render: function() {
+            // redefine sort properties and call collection.resort() before rendering
+            this.collection.sort = 'name';
+            this.collection.direction = 'asc';
+            
             this.$el.html(this.template({collection: this.collection.resort()}))
         }
     });
